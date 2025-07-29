@@ -1,8 +1,3 @@
-/*
- * Student Numbers: 222034621, 221019559, 223083143, 223004229, 222074359, 223051502, 223021893
- * Student Names  : Temeki K, Maduna R, Ngwenya OL, Serebolo R, Rampedi MO, Masabala T, Sebolai KL
- * Question       : BookingDetailScreen
- */
 
 import 'package:final_test/models/student_booking_model.dart';
 import 'package:final_test/routes/route_manager.dart';
