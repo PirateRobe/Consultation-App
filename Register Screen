@@ -1,0 +1,108 @@
+
+
+import 'package:final_test/routes/route_manager.dart'; // Import custom route manager for app navigation
+import 'package:final_test/viewmodels/auth_view_model.dart'; // Import AuthViewModel for authentication state management
+import 'package:final_test/viewmodels/booking_view_model.dart'; // Import BookingViewModel for booking logic
+import 'package:final_test/viewmodels/profile_view_model.dart'; // Import ProfileViewModel for profile management
+import 'package:firebase_core/firebase_core.dart'; // Import Firebase core package for initialization
+import 'package:flutter/foundation.dart'; // Import Flutter foundation for platform detection
+import 'package:flutter/material.dart'; // Import Flutter material design package
+import 'package:provider/provider.dart'; // Import Provider for state management
+
+// Entry point of the app
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter binding initialized before Firebase setup
+
+  if (kIsWeb) {
+    // Initialize Firebase with web-specific options if running on web platform
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: "AIzaSyCTNtkjryWN19ZXieq-Tn5WN91pVDBqSnI",
+        authDomain: "final-test-5500a.firebaseapp.com",
+        projectId: "final-test-5500a",
+        storageBucket: "final-test-5500a.appspot.com",
+        messagingSenderId: "906272212269",
+        appId: "1:906272212269:web:6ea5b9173a2828ed95bfa4",
+      ),
+    );
+  } else {
+    // Initialize Firebase with default native options for mobile platforms
+    await Firebase.initializeApp();
+  }
+
+  runApp(const MyApp()); // Run the root widget
+}
+
+// Root widget of the app
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      // Provide multiple ChangeNotifier providers for state management across the app
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()), // Auth state
+        ChangeNotifierProvider(
+          create: (_) => BookingViewModel(),
+        ), // Booking state
+        ChangeNotifierProvider(
+          create: (_) => ProfileViewModel(),
+        ), // Profile state
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false, // Disable debug banner in the app
+        title: 'Consultation Booking App', // App title
+        theme: ThemeData(
+          primaryColor: Colors.deepOrangeAccent, // Primary color for the app
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch:
+                Colors
+                    .deepOrange, // Primary swatch used to generate color scheme
+          ).copyWith(
+            secondary: Colors.deepOrangeAccent,
+          ), // Secondary color override
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.deepOrange, // AppBar background color
+            iconTheme: IconThemeData(color: Colors.white), // AppBar icon color
+            titleTextStyle: TextStyle(
+              color: Colors.white, // AppBar title text color
+              fontSize: 20, // Title font size
+              fontWeight: FontWeight.bold, // Title font weight
+            ),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Colors.deepOrangeAccent, // Button background color
+              foregroundColor: Colors.white, // Button text/icon color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12), // Rounded corners
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+                horizontal: 24,
+              ), // Padding inside button
+              textStyle: const TextStyle(
+                fontSize: 16, // Button font size
+                fontWeight: FontWeight.bold, // Button font weight
+              ),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey,
+            ), // Text button default color
+          ),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Colors.blueGrey, // FAB background color
+            foregroundColor: Colors.white, // FAB icon color
+          ),
+        ),
+        initialRoute: RouteManager.login, // Initial route when app starts
+        onGenerateRoute:
+            RouteManager.generateRoute, // Route generator for named routes
+      ),
+    );
+  }
+}
